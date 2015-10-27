@@ -5,5 +5,3 @@ jdk:
   - openjdk7
 os:
   - linux
-before_install:
-  - mvn jfx:jar
