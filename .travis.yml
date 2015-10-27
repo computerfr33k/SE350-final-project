@@ -5,3 +5,4 @@ jdk:
   - openjdk7
 os:
   - linux
+sudo: false
