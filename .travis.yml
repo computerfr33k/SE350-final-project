@@ -3,10 +3,6 @@ jdk:
   - oraclejdk8
 os:
   - linux
-  - osx
-matrix:
-  allow_failures:
-    - os: osx
 sudo: false
 cache:
   directories:

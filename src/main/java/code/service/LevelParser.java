@@ -11,10 +11,10 @@ import java.io.FileReader;
  * Created by eric on 10/26/15.
  */
 public class LevelParser {
-    public static void parse(String filename) throws FileNotFoundException {
+    public static LayoutMap parse(String filename) throws FileNotFoundException {
         Gson gson = new Gson();
         BufferedReader br = new BufferedReader(new FileReader(filename));
 
-        System.out.println(gson.fromJson(br, LayoutMap.class));
+        return gson.fromJson(br, LayoutMap.class);
     }
 }

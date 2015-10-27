@@ -6,6 +6,10 @@ package code.model;
 public class LayoutMap {
     private Layout layout;
 
+    public Layout getLayout() {
+        return layout;
+    }
+
     @Override
     public String toString() {
         return "LayoutMap{" +

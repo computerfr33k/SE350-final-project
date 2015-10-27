@@ -7,11 +7,21 @@ import java.awt.*;
  */
 public class Cell {
     private Point point;
+    private Type type;
+
+    public Point getPoint() {
+        return point;
+    }
+
+    public Type getType() {
+        return type;
+    }
 
     @Override
     public String toString() {
         return "Cell{" +
                 "point=" + point +
+                ", type=" + type +
                 '}';
     }
 }

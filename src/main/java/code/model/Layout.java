@@ -8,6 +8,10 @@ import java.util.ArrayList;
 public class Layout {
     private ArrayList<Cell> cells;
 
+    public ArrayList<Cell> getCells() {
+        return cells;
+    }
+
     @Override
     public String toString() {
         return "Layout{" +
