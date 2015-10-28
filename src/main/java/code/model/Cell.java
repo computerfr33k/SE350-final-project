@@ -9,12 +9,25 @@ public class Cell {
     private Point point;
     private Type type;
 
+    public Cell(Point point, Type type) {
+        this.point = point;
+        this.type = type;
+    }
+
     public Point getPoint() {
         return point;
     }
 
+    public void setPoint(Point point) {
+        this.point = point;
+    }
+
     public Type getType() {
         return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     @Override

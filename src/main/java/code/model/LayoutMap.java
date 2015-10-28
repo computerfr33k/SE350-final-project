@@ -10,6 +10,10 @@ public class LayoutMap {
         return layout;
     }
 
+    public void setLayout(Layout layout) {
+        this.layout = layout;
+    }
+
     @Override
     public String toString() {
         return "LayoutMap{" +

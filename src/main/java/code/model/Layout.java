@@ -12,6 +12,10 @@ public class Layout {
         return cells;
     }
 
+    public void setCells(ArrayList<Cell> cells) {
+        this.cells = cells;
+    }
+
     @Override
     public String toString() {
         return "Layout{" +
