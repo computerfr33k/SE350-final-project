@@ -1,0 +1,23 @@
+@startuml
+
+class LevelParser {
+    parse(String filename) : LayoutMap
+}
+
+class ImageMapper {
+    basePath : String
+    getImage(Type) : Image
+}
+
+interface Tile {
+    getImage() : Image
+    setImage(Image) : void
+    getCoordinates() : Point2D
+}
+
+class EmptyTile implements Tile {
+    imageName : String
+    coordinates : Point2D
+}
+
+@enduml

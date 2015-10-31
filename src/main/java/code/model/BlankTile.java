@@ -5,11 +5,11 @@ import java.awt.*;
 /**
  * Created by eric on 10/26/15.
  */
-public class Cell {
+public class BlankTile {
     private Point point;
     private Type type;
 
-    public Cell(Point point, Type type) {
+    public BlankTile(Point point, Type type) {
         this.point = point;
         this.type = type;
     }
@@ -32,7 +32,7 @@ public class Cell {
 
     @Override
     public String toString() {
-        return "Cell{" +
+        return "BlankTile{" +
                 "point=" + point +
                 ", type=" + type +
                 '}';

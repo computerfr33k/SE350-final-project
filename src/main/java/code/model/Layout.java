@@ -6,20 +6,20 @@ import java.util.ArrayList;
  * Created by eric on 10/26/15.
  */
 public class Layout {
-    private ArrayList<Cell> cells;
+    private ArrayList<BlankTile> cells;
 
-    public ArrayList<Cell> getCells() {
+    public ArrayList<BlankTile> getBlankTiles() {
         return cells;
     }
 
-    public void setCells(ArrayList<Cell> cells) {
-        this.cells = cells;
+    public void setBlankTiles(ArrayList<BlankTile> blankTiles) {
+        this.cells = blankTiles;
     }
 
     @Override
     public String toString() {
         return "Layout{" +
-                "cells=" + cells +
+                "blankTiles=" + cells +
                 '}';
     }
 }

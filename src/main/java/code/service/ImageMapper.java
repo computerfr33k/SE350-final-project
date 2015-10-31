@@ -15,11 +15,14 @@ public class ImageMapper {
     public static Image getImage(Type type) throws FileNotFoundException {
         switch (type.getId()) {
             case Type.emptyTile:
-                Image tile = new Image(new FileInputStream(basePath + "blankTile.png"));
+                Image tile = new Image(new FileInputStream(basePath + "BlankTile.png"));
                 return tile;
 
             case Type.emptyTileBottomEdge:
                 return new Image(new FileInputStream(basePath + "blankTileBottom.png"));
+
+            case Type.emptyTileRightEdge:
+                return new Image(new FileInputStream(basePath + "blankTileRight.png"));
 
             default:
                 return null;

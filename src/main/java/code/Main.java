@@ -1,8 +1,8 @@
 package code;
 
-import code.model.Cell;
+import code.asset.AssetManager;
+import code.model.BlankTile;
 import code.model.LayoutMap;
-import code.service.ImageMapper;
 import code.service.LevelParser;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -25,15 +25,15 @@ public class Main extends Application {
     public static void main(String[] args) {
         /*Gson gson = new Gson();
         LayoutMap map = new LayoutMap();
-        ArrayList<Cell> cells = new ArrayList<Cell>();
+        ArrayList<BlankTile> cells = new ArrayList<BlankTile>();
 
         for(int i=0; i< 25; i++) {
             for(int j=0; j<25; j++) {
-                cells.add(new Cell(new Point(i,j), new Type()));
+                cells.add(new BlankTile(new Point(i,j), new Type()));
             }
         }
         Layout layout = new Layout();
-        layout.setCells(cells);
+        layout.setBlankTiles(cells);
         map.setLayout(layout);
 
         File file = new File("./default.json");
@@ -51,8 +51,15 @@ public class Main extends Application {
     }
 
     @Override
+    public void init() throws Exception {
+        super.init();
+    }
+
+    @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("Chips Challenge - Created by Eric Pfeiffer");
+        AssetManager.getInstance().loadAssets("./src/main/resources/images");
+        AssetManager.getInstance().logCached();
 
         GridPane gridPane = new GridPane();
 
@@ -62,22 +69,23 @@ public class Main extends Application {
         double gridWidth = sceneWidth / n;
         double gridHeight = sceneHeight / m;
 
-        Cell[][] playfield = new Cell[n][m];
+        BlankTile[][] playfield = new BlankTile[n][m];
 
         // parse level file and display
         LayoutMap map = LevelParser.parse("./src/main/resources/levels/default.json");
 
         // Initialize Playfield from parsed map
-        for (Cell cell : map.getLayout().getCells()) {
-            int x = cell.getPoint().x,
-                    y = cell.getPoint().y;
+        for (BlankTile blankTile : map.getLayout().getBlankTiles()) {
+            int x = blankTile.getPoint().x,
+                    y = blankTile.getPoint().y;
 
-            MyNode node = new MyNode(cell);
+            MyNode node = new MyNode(blankTile);
             gridPane.add(node, x, y);
-            playfield[x][y] = cell;
+            playfield[x][y] = blankTile;
         }
 
         Scene scene = new Scene(gridPane, sceneWidth, sceneHeight);
+        addKeyListeners(scene);
         stage.setScene(scene);
         stage.show();
     }
@@ -109,9 +117,9 @@ public class Main extends Application {
      * Abstraction for cells to be able to be displayed on screen as Image
      */
     private class MyNode extends ImageView {
-        public MyNode(Cell cell) {
+        public MyNode(BlankTile blankTile) {
             try {
-                setImage(ImageMapper.getImage(cell.getType()));
+                setImage(AssetManager.getInstance().getImage(blankTile.getClass()));
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
