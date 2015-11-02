@@ -7,4 +7,6 @@ release.properties
 dependency-reduced-pom.xml
 /.idea
 *.iml
+/saves
+/logs
 buildNumber.properties
