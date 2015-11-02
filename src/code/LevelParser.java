@@ -36,6 +36,12 @@ public class LevelParser {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                } else if (c == '2') {
+                    try {
+                        level.addTile(j, i - 1, new Entity(Type.ENEMY));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

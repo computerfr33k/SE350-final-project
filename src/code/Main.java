@@ -46,23 +46,37 @@ public class Main extends GameApplication {
         input.addAction(new UserAction("Move Up") {
             @Override
             protected void onActionBegin() {
-                player.translate(0, -BLOCK_SIZE);
+                Point2D nextCoord = new Point2D(player.getX(), player.getY() - BLOCK_SIZE);
 
-                /**
-                 * Move the "Camera" as Chip moves.
-                 */
-                getGameScene().getRoot().setTranslateY(getGameScene().getRoot().getTranslateY() + BLOCK_SIZE);
-                time.setTranslateY(time.getTranslateY() - BLOCK_SIZE);
-                timeLabel.setTranslateY(timeLabel.getTranslateY() - BLOCK_SIZE);
-                startTimer = true;
+                if (getGameWorld().getEntityAt(nextCoord).get().getEntityType() != Type.WALL) {
+                    player.setPosition(nextCoord);
+
+                    /**
+                     * Move the "Camera" as Chip moves.
+                     */
+                    getGameScene().getRoot().setTranslateY(getGameScene().getRoot().getTranslateY() + BLOCK_SIZE);
+                    time.setTranslateY(time.getTranslateY() - BLOCK_SIZE);
+                    timeLabel.setTranslateY(timeLabel.getTranslateY() - BLOCK_SIZE);
+                    startTimer = true;
+                }
             }
         }, KeyCode.UP);
 
         input.addAction(new UserAction("Move Down") {
             @Override
             protected void onActionBegin() {
-                player.translate(0, BLOCK_SIZE);
-                startTimer = true;
+                Point2D nextCoord = new Point2D(player.getX(), player.getY() + BLOCK_SIZE);
+                if (getGameWorld().getEntityAt(nextCoord).get().getEntityType() != Type.WALL) {
+                    player.setPosition(nextCoord);
+
+                    /**
+                     * Move the "Camera" as Chip moves.
+                     */
+                    getGameScene().getRoot().setTranslateY(getGameScene().getRoot().getTranslateY() - BLOCK_SIZE);
+                    time.setTranslateY(time.getTranslateY() + BLOCK_SIZE);
+                    timeLabel.setTranslateY(timeLabel.getTranslateY() + BLOCK_SIZE);
+                    startTimer = true;
+                }
             }
         }, KeyCode.DOWN);
 
@@ -86,27 +100,15 @@ public class Main extends GameApplication {
     @Override
     protected void initAssets() throws Exception {
         getAssetManager().cache().logCached();
-        System.out.println(getAssetManager().loadFileNames("/src/assets/text/default_level.txt"));
     }
 
     @Override
     protected void initGame() {
-        // Add Black Background
-        /*Rectangle rectangle = new Rectangle(getWidth(), getHeight());
-        rectangle.setFill(Color.BLACK);
-        Entity background = Entity.noType();
-        background.setSceneView(rectangle);
-        background.setCollidable(false);
-        background.setGenerateHitBoxesFromView(false);
-        getGameWorld().addEntity(background);*/
-
-
         // Parse Level to show on the screen
         Level grid = null;
         try {
             grid = LevelParser.parse(getAssetManager(), getAssetManager().cache().getText("default_level.txt"));
             for (Entity entity : grid.getGrid().values()) {
-                System.out.println("Added Ent");
                 getGameWorld().addEntity(entity);
             }
         } catch (Exception e) {
