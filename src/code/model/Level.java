@@ -23,21 +23,23 @@ public class Level {
 
     public void addTile(int x, int y, Entity tile) throws Exception {
         // set tile location
-        tile.setX(32 * x);
-        tile.setY(32 * y);
+        tile.setX(Tile.getBlockSize() * x);
+        tile.setY(Tile.getBlockSize() * y);
 
-        if (tile.getEntityType() == Type.EMPTY) {
+        if (tile.isType(Type.EMPTY)) {
 
             Rectangle rectangle = new Rectangle(Tile.getBlockSize(), Tile.getBlockSize());
             rectangle.setFill(Color.GREY);
             rectangle.setStroke(Color.BLACK);
+            tile.setCollidable(false);
 
             tile.setSceneView(rectangle);
-        } else if (tile.getEntityType() == Type.ENEMY) {
+        } else if (tile.isType(Type.ENEMY)) {
             Rectangle rect = new Rectangle(Tile.getBlockSize(), Tile.getBlockSize());
             rect.setFill(Color.RED);
 
             tile.setSceneView(rect);
+            tile.setCollidable(true);
         }
 
         grid.put(new Point2D(x, y), tile);
