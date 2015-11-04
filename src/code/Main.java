@@ -112,6 +112,13 @@ public class Main extends GameApplication {
                 startTimer = true;
             }
         }, KeyCode.LEFT);
+
+        input.addAction(new UserAction("Take ScreenShot") {
+            @Override
+            protected void onAction() {
+                getSceneManager().saveScreenshot();
+            }
+        }, KeyCode.SPACE);
     }
 
     @Override
