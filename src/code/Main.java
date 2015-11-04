@@ -1,5 +1,7 @@
 package code;
 
+import code.controller.Assets;
+import code.model.EmptyTile;
 import code.model.Level;
 import code.model.Type;
 import com.almasb.fxgl.GameApplication;
@@ -13,8 +15,11 @@ import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsManager;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.util.ApplicationMode;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Point2D;
+import javafx.scene.control.ListView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -32,6 +37,8 @@ public class Main extends GameApplication {
     private List<Entity> enemies;
     private Text time;
     private Text timeLabel;
+    private Text inventory;
+    private ListView hbox;
     private boolean startTimer = false;
 
     public static void main(String[] args) {
@@ -110,6 +117,8 @@ public class Main extends GameApplication {
     @Override
     protected void initAssets() throws Exception {
         getAssetManager().cache().logCached();
+
+        Assets.getInstance().setAssetManager(getAssetManager());
     }
 
     @Override
@@ -127,20 +136,8 @@ public class Main extends GameApplication {
         }
 
         enemies = new ArrayList<Entity>();
-        /*player = new Entity(Type.PLAYER);
-        try {
-            player.setSceneView(getAssetManager().cache().getTexture("chipDown.png"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        player.setGenerateHitBoxesFromView(true);
-        // player.addHitBox(generatePlayerHitbox());
-        player.setPosition(new Point2D(BLOCK_SIZE * 2, BLOCK_SIZE * 2));
-
-        getGameWorld().addEntities(player);*/
 
         initPlayer();
-        //initEnemy();
     }
 
     private void initPlayer() {
@@ -159,16 +156,6 @@ public class Main extends GameApplication {
         getGameWorld().addEntity(player);
     }
 
-    private void initEnemy() {
-        Entity enemy = new Entity(Type.ENEMY);
-        enemy.setPosition(32 * 5, 32 * 4);
-
-        Rectangle rect = new Rectangle(32, 32);
-        rect.setFill(Color.GOLD);
-
-        enemy.setSceneView(rect);
-    }
-
     @Override
     protected void initPhysics() {
         PhysicsManager physicsManager = getPhysicsManager();
@@ -178,8 +165,33 @@ public class Main extends GameApplication {
                 spawnExposion(a.getCenter());
                 a.removeFromWorld();
                 b.removeFromWorld();
+            }
+        });
 
-                System.out.println("EXPLODE!");
+        physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.RED_KEY) {
+            @Override
+            protected void onCollision(Entity a, Entity b) {
+                hbox.getItems().add("Red Key");
+                EmptyTile tile = new EmptyTile();
+                tile.setPosition(b.getPosition());
+                // Remove the item from the board since it was picked up
+                b.removeFromWorld();
+                // Now Add a empty tile in place of the item
+                getGameWorld().addEntity(tile);
+            }
+        });
+
+        physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.CHIP) {
+            @Override
+            protected void onCollision(Entity a, Entity b) {
+                hbox.getItems().add("Chip");
+
+                // Replace tile with empty one
+                EmptyTile tile = new EmptyTile();
+                tile.setPosition(b.getPosition());
+
+                b.removeFromWorld();
+                getGameWorld().addEntity(tile);
             }
         });
     }
@@ -210,7 +222,18 @@ public class Main extends GameApplication {
         time.setTranslateX(timeLabel.getTranslateX() + 55);
         time.setTranslateY(40);
 
-        getGameScene().addUINodes(timeLabel, time);
+        inventory = new Text("Inventory: ");
+        inventory.setTranslateX(BLOCK_SIZE * 30);
+        inventory.setTranslateY(BLOCK_SIZE * 9);
+        inventory.setFont(Font.font(18));
+
+        ObservableList<String> list = FXCollections.observableArrayList("test");
+        hbox = new ListView();
+        hbox.setTranslateX(BLOCK_SIZE * 31);
+        hbox.setTranslateY(BLOCK_SIZE * 11);
+        hbox.setItems(list);
+
+        getGameScene().addUINodes(timeLabel, time, inventory, hbox);
     }
 
     @Override

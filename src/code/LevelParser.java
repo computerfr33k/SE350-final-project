@@ -1,8 +1,11 @@
 package code;
 
+import code.model.EmptyTile;
+import code.model.Enemy;
 import code.model.Level;
-import code.model.Type;
 import code.model.Wall;
+import code.model.items.Chip;
+import code.model.items.RedKey;
 import com.almasb.fxgl.asset.AssetManager;
 import com.almasb.fxgl.entity.Entity;
 
@@ -14,7 +17,7 @@ import java.util.List;
 public class LevelParser {
     public static int BLOCK_SIZE = 32;
 
-    public static Level parse(AssetManager assetManager, List<String> levelData) {
+    public static Level parse(AssetManager assetManager, List<String> levelData) throws Exception {
         Level level = new Level(assetManager);
 
         int x = Integer.parseInt(levelData.get(0).split(",")[0]);
@@ -24,28 +27,29 @@ public class LevelParser {
             String line = levelData.get(i);
             for (int j = 0; j < x; j++) {
                 char c = line.charAt(j);
+                Entity entity = null;
+
                 if (c == '1') {
-                    try {
-                        level.addTile(j, i - 1, new Wall());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    entity = new Wall();
                 } else if (c == '0') {
-                    try {
-                        level.addTile(j, i - 1, new Entity(Type.EMPTY));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    entity = new EmptyTile();
                 } else if (c == '2') {
-                    try {
-                        level.addTile(j, i - 1, new Entity(Type.ENEMY));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    entity = new Enemy();
+                } else if (c == '3') {
+                    entity = new RedKey();
+                } else if (c == '4') {
+                    entity = new Chip();
+                }
+
+                if (entity != null) {
+                    level.addTile(j, i - 1, entity);
                 }
             }
         }
 
         return level;
+    }
+
+    public static void save(Level level) {
     }
 }

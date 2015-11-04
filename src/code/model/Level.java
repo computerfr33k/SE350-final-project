@@ -3,8 +3,6 @@ package code.model;
 import com.almasb.fxgl.asset.AssetManager;
 import com.almasb.fxgl.entity.Entity;
 import javafx.geometry.Point2D;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,24 +21,8 @@ public class Level {
 
     public void addTile(int x, int y, Entity tile) throws Exception {
         // set tile location
-        tile.setX(Tile.getBlockSize() * x);
-        tile.setY(Tile.getBlockSize() * y);
-
-        if (tile.isType(Type.EMPTY)) {
-
-            Rectangle rectangle = new Rectangle(Tile.getBlockSize(), Tile.getBlockSize());
-            rectangle.setFill(Color.GREY);
-            rectangle.setStroke(Color.BLACK);
-            tile.setCollidable(false);
-
-            tile.setSceneView(rectangle);
-        } else if (tile.isType(Type.ENEMY)) {
-            Rectangle rect = new Rectangle(Tile.getBlockSize(), Tile.getBlockSize());
-            rect.setFill(Color.RED);
-
-            tile.setSceneView(rect);
-            tile.setCollidable(true);
-        }
+        tile.setX(Tile.BLOCK_SIZE * x);
+        tile.setY(Tile.BLOCK_SIZE * y);
 
         grid.put(new Point2D(x, y), tile);
     }
