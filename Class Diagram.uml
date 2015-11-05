@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="542.6889285714285" y="0.0">code.AbstractTile</node>
+    <node x="125.87833333333333" y="206.5">code.model.Player</node>
+    <node x="740.1889285714285" y="153.0">code.model.Level</node>
+    <node x="1068.1889285714285" y="206.5">code.model.Wall</node>
+    <node x="234.0" y="895.0">code.controller.Assets</node>
+    <node x="755.0" y="895.0">code.model.Tile</node>
+    <node x="420.0753571428571" y="217.5">code.model.EmptyTile</node>
+    <node x="0.0" y="401.0">code.Main</node>
+    <node x="1199.1889285714287" y="206.5">code.model.items.Chip</node>
+    <node x="269.87833333333333" y="217.5">code.model.Enemy</node>
+    <node x="512.0" y="895.0">code.model.BackgroundRenderLayer</node>
+    <node x="0.0" y="895.0">code.model.Type</node>
+    <node x="609.1889285714285" y="217.5">code.model.items.RedKey</node>
+    <node x="616.5114285714286" y="601.0">code.LevelParser</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="code.model.Wall" target="code.AbstractTile">
+      <point x="0.0" y="-35.5" />
+      <point x="1123.6889285714285" y="123.0" />
+      <point x="734.4032142857143" y="123.0" />
+      <point x="69.71428571428572" y="46.5" />
+    </edge>
+    <edge source="code.model.EmptyTile" target="code.AbstractTile">
+      <point x="0.0" y="-24.5" />
+      <point x="482.5753571428571" y="133.0" />
+      <point x="629.8317857142857" y="133.0" />
+      <point x="-34.85714285714283" y="46.5" />
+    </edge>
+    <edge source="code.model.Level" target="code.AbstractTile">
+      <point x="0.0" y="-89.0" />
+      <point x="894.1889285714285" y="133.0" />
+      <point x="699.5460714285714" y="133.0" />
+      <point x="34.85714285714283" y="46.5" />
+    </edge>
+    <edge source="code.model.Player" target="code.AbstractTile">
+      <point x="0.0" y="-35.5" />
+      <point x="187.87833333333333" y="113.0" />
+      <point x="560.1175000000001" y="113.0" />
+      <point x="-104.57142857142856" y="46.5" />
+    </edge>
+    <edge source="code.model.items.RedKey" target="code.AbstractTile">
+      <point x="0.0" y="-24.5" />
+      <point x="0.0" y="46.5" />
+    </edge>
+    <edge source="code.LevelParser" target="code.model.EmptyTile">
+      <point x="-77.25" y="-24.5" />
+      <point x="693.7614285714286" y="361.0" />
+      <point x="513.8253571428571" y="361.0" />
+      <point x="31.25" y="24.5" />
+    </edge>
+    <edge source="code.LevelParser" target="code.model.Enemy">
+      <point x="-128.75" y="-24.5" />
+      <point x="642.2614285714286" y="371.0" />
+      <point x="359.04499999999996" y="371.0" />
+      <point x="35.66666666666666" y="24.5" />
+    </edge>
+    <edge source="code.LevelParser" target="code.model.items.RedKey">
+      <point x="-25.75" y="-24.5" />
+      <point x="745.2614285714286" y="351.0" />
+      <point x="664.6889285714285" y="351.0" />
+      <point x="0.0" y="24.5" />
+    </edge>
+    <edge source="code.model.Enemy" target="code.AbstractTile">
+      <point x="0.0" y="-24.5" />
+      <point x="323.37833333333333" y="123.0" />
+      <point x="594.9746428571428" y="123.0" />
+      <point x="-69.71428571428572" y="46.5" />
+    </edge>
+    <edge source="code.model.items.Chip" target="code.AbstractTile">
+      <point x="0.0" y="-35.5" />
+      <point x="1255.6889285714287" y="113.0" />
+      <point x="769.2603571428572" y="113.0" />
+      <point x="104.57142857142861" y="46.5" />
+    </edge>
+    <edge source="code.LevelParser" target="code.model.items.Chip">
+      <point x="128.75" y="-24.5" />
+      <point x="899.7614285714286" y="381.0" />
+      <point x="1255.6889285714287" y="381.0" />
+      <point x="0.0" y="35.5" />
+    </edge>
+    <edge source="code.Main" target="code.model.Enemy">
+      <point x="0.0" y="-224.5" />
+      <point x="262.0" y="381.0" />
+      <point x="287.7116666666667" y="381.0" />
+      <point x="-35.66666666666666" y="24.5" />
+    </edge>
+    <edge source="code.LevelParser" target="code.model.Level">
+      <point x="25.75" y="-24.5" />
+      <point x="796.7614285714286" y="361.0" />
+      <point x="894.1889285714285" y="361.0" />
+      <point x="0.0" y="89.0" />
+    </edge>
+    <edge source="code.Main" target="code.model.EmptyTile">
+      <point x="209.60000000000002" y="-224.5" />
+      <point x="471.6" y="381.0" />
+      <point x="451.3253571428571" y="381.0" />
+      <point x="-31.25" y="24.5" />
+    </edge>
+    <edge source="code.Main" target="code.model.Player">
+      <point x="-104.80000000000001" y="-224.5" />
+      <point x="157.2" y="381.0" />
+      <point x="218.87833333333333" y="381.0" />
+      <point x="31.0" y="35.5" />
+    </edge>
+    <edge source="code.LevelParser" target="code.model.Wall">
+      <point x="77.25" y="-24.5" />
+      <point x="848.2614285714286" y="371.0" />
+      <point x="1123.6889285714285" y="371.0" />
+      <point x="0.0" y="35.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.6403669724770642" x="656.5" y="535.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Constructors</Category>
+    <Category>Properties</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

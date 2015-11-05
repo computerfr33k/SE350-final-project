@@ -21,14 +21,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Main extends GameApplication {
     private static int BLOCK_SIZE = 32;
     Enemy enemy;
     private Player player;
-    private List<Entity> enemies;
     private Text time;
     private Text timeLabel;
     private Text inventory;
@@ -131,8 +127,6 @@ public class Main extends GameApplication {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        enemies = new ArrayList<Entity>();
 
         initPlayer();
     }
