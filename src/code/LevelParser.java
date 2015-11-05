@@ -7,7 +7,6 @@ import code.model.Wall;
 import code.model.items.Chip;
 import code.model.items.RedKey;
 import com.almasb.fxgl.asset.AssetManager;
-import com.almasb.fxgl.entity.Entity;
 
 import java.util.List;
 
@@ -15,8 +14,6 @@ import java.util.List;
  * Created by eric on 11/2/15.
  */
 public class LevelParser {
-    public static int BLOCK_SIZE = 32;
-
     public static Level parse(AssetManager assetManager, List<String> levelData) throws Exception {
         Level level = new Level(assetManager);
 
@@ -27,7 +24,7 @@ public class LevelParser {
             String line = levelData.get(i);
             for (int j = 0; j < x; j++) {
                 char c = line.charAt(j);
-                Entity entity = null;
+                AbstractTile entity = null;
 
                 if (c == '1') {
                     entity = new Wall();
@@ -48,8 +45,5 @@ public class LevelParser {
         }
 
         return level;
-    }
-
-    public static void save(Level level) {
     }
 }

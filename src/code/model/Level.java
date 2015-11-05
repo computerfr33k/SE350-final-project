@@ -1,5 +1,6 @@
 package code.model;
 
+import code.AbstractTile;
 import com.almasb.fxgl.asset.AssetManager;
 import com.almasb.fxgl.entity.Entity;
 import javafx.geometry.Point2D;
@@ -11,15 +12,15 @@ import java.util.Map;
  * Created by eric on 11/2/15.
  */
 public class Level {
-    private Map<Point2D, Entity> grid;
+    private Map<Point2D, AbstractTile> grid;
     private AssetManager assets;
 
     public Level(AssetManager assets) {
         this.assets = assets;
-        grid = new HashMap<Point2D, Entity>();
+        grid = new HashMap<Point2D, AbstractTile>();
     }
 
-    public void addTile(int x, int y, Entity tile) throws Exception {
+    public void addTile(int x, int y, AbstractTile tile) throws Exception {
         // set tile location
         tile.setX(Tile.BLOCK_SIZE * x);
         tile.setY(Tile.BLOCK_SIZE * y);
@@ -27,7 +28,7 @@ public class Level {
         grid.put(new Point2D(x, y), tile);
     }
 
-    public Map<Point2D, Entity> getGrid() {
+    public Map<Point2D, AbstractTile> getGrid() {
         return grid;
     }
 

@@ -1,13 +1,14 @@
 package code.model;
 
-import com.almasb.fxgl.entity.Entity;
+import code.AbstractTile;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
  * Created by eric on 11/3/15.
  */
-public class EmptyTile extends Entity {
+public final class EmptyTile extends AbstractTile {
+
     public EmptyTile() {
         super(Type.EMPTY);
 
@@ -16,6 +17,6 @@ public class EmptyTile extends Entity {
         rectangle.setStroke(Color.BLACK);
         setCollidable(false);
 
-        setSceneView(rectangle);
+        view.addNode(rectangle);
     }
 }
