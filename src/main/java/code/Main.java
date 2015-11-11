@@ -43,7 +43,7 @@ public class Main extends GameApplication {
         gameSettings.setVersion("0.1");
         gameSettings.setTitle("SE 350 Final Project");
         gameSettings.setWidth(1280);
-        gameSettings.setHeight(720);
+        gameSettings.setHeight(800);
         gameSettings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 
@@ -167,6 +167,13 @@ public class Main extends GameApplication {
             @Override
             protected void onCollision(Entity a, Entity b) {
                 pickUpItem("Chip", b);
+            }
+        });
+
+        physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.PORTAL) {
+            @Override
+            protected void onCollisionBegin(Entity a, Entity b) {
+                getSceneManager().showMessageBox("Congratulations, You Won!");
             }
         });
     }

@@ -1,9 +1,6 @@
 package code;
 
-import code.model.EmptyTile;
-import code.model.Enemy;
-import code.model.Level;
-import code.model.Wall;
+import code.model.*;
 import code.model.items.Chip;
 import code.model.items.RedKey;
 import com.almasb.fxgl.asset.AssetManager;
@@ -36,6 +33,8 @@ public class LevelParser {
                     entity = new RedKey();
                 } else if (c == '4') {
                     entity = new Chip();
+                } else if (c == '5') {
+                    entity = new Portal();
                 }
 
                 if (entity != null) {

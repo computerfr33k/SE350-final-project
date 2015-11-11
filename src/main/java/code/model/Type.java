@@ -7,5 +7,6 @@ import com.almasb.fxgl.entity.EntityType;
  */
 public enum Type implements EntityType {
     WALL, ENEMY, PLAYER, EMPTY, EXPLOSION,
-    CHIP, RED_KEY
+    CHIP, RED_KEY,
+    PORTAL
 }
