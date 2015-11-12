@@ -22,8 +22,6 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class Main extends GameApplication {
-    private static int BLOCK_SIZE = 32;
-    Enemy enemy;
     private Player player;
     private Text time;
     private Text timeLabel;
@@ -53,7 +51,7 @@ public class Main extends GameApplication {
         input.addAction(new UserAction("Move Up") {
             @Override
             protected void onActionBegin() {
-                Point2D nextCoord = new Point2D(player.getX(), player.getY() - BLOCK_SIZE);
+                Point2D nextCoord = new Point2D(player.getX(), player.getY() - Tile.BLOCK_SIZE);
 
                 if (getGameWorld().getEntityAt(nextCoord).get().getEntityType() != Type.WALL) {
                     player.setPosition(nextCoord);
@@ -66,7 +64,7 @@ public class Main extends GameApplication {
         input.addAction(new UserAction("Move Down") {
             @Override
             protected void onActionBegin() {
-                Point2D nextCoord = new Point2D(player.getX(), player.getY() + BLOCK_SIZE);
+                Point2D nextCoord = new Point2D(player.getX(), player.getY() + Tile.BLOCK_SIZE);
                 if (!getGameWorld().getEntityAt(nextCoord).get().isType(Type.WALL)) {
                     player.setPosition(nextCoord);
 
@@ -114,8 +112,6 @@ public class Main extends GameApplication {
 
     @Override
     protected void initGame() {
-
-        enemy = new Enemy();
 
         // Parse Level to show on the screen
         Level grid = null;
