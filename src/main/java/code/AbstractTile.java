@@ -6,6 +6,9 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityType;
 import com.almasb.fxgl.entity.EntityView;
 import com.almasb.fxgl.physics.HitBox;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.geometry.BoundingBox;
 
 /**
@@ -13,6 +16,7 @@ import javafx.geometry.BoundingBox;
  */
 public abstract class AbstractTile extends Entity {
     protected EntityView view;
+    protected BooleanProperty isKeyedEntrance;
 
     public AbstractTile(EntityType type) {
         super(type);
@@ -22,6 +26,8 @@ public abstract class AbstractTile extends Entity {
         view.setRenderLayer(BackgroundRenderLayer.getLayer());
         view.translateXProperty().bind(this.xProperty());
         view.translateYProperty().bind(this.yProperty());
+
+        isKeyedEntrance = new ReadOnlyBooleanWrapper(false);
     }
 
     protected HitBox generateTileHitBox() {
@@ -31,5 +37,9 @@ public abstract class AbstractTile extends Entity {
 
     public final EntityView getView() {
         return view;
+    }
+
+    public final ReadOnlyBooleanProperty isKeyedEntrance() {
+        return isKeyedEntrance;
     }
 }

@@ -48,21 +48,19 @@ public class Main extends GameApplication {
         gameSettings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 
-    private ReadOnlyBooleanProperty isPassableEntity(Entity entity) {
+    private ReadOnlyBooleanProperty isPassableEntity(AbstractTile entity) {
         BooleanProperty wall = new ReadOnlyBooleanWrapper(true);
 
         // Check for entities that are not passable
         if (entity.getEntityType() == Type.WALL) {
             wall.setValue(false);
-        } else if (entity.getEntityType() == Type.RED_KEY_WALL && !hbox.getItems().contains("Red Key")) {
-            wall.setValue(false);
-        } else if (entity.getEntityType() == Type.BLUE_KEY_WALL && !hbox.getItems().contains("Blue Key")) {
-            wall.setValue(false);
-        } else if (entity.getEntityType() == Type.YELLOW_KEY_WALL && !hbox.getItems().contains("Yellow Key")) {
-            wall.setValue(false);
-        } else if (entity.getEntityType() == Type.GREEN_KEY_WALL && !hbox.getItems().contains("Green Key")) {
-            wall.setValue(false);
+        } else if (entity.isKeyedEntrance().getValue()) {
+            if (!hbox.getItems().contains(entity.getClass().getSimpleName().replace("Wall", ""))) {
+                wall.setValue(false);
+            }
         }
+
+        System.out.println(wall.get());
 
         return wall;
     }
@@ -74,7 +72,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX(), player.getY() - Tile.BLOCK_SIZE);
-                if (isPassableEntity(getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
+                if (isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
                     player.setPosition(nextCoord);
 
                     startTimer = true;
@@ -86,7 +84,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX(), player.getY() + Tile.BLOCK_SIZE);
-                if (isPassableEntity(getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
+                if (isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
                     player.setPosition(nextCoord);
 
                     startTimer = true;
@@ -98,7 +96,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX() + Tile.BLOCK_SIZE, player.getY());
-                if (isPassableEntity(getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
+                if (isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
                     player.translate(Tile.BLOCK_SIZE, 0);
                     startTimer = true;
                 }
@@ -109,7 +107,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX() - Tile.BLOCK_SIZE, player.getY());
-                if (isPassableEntity(getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
+                if (isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
                     player.translate(-Tile.BLOCK_SIZE, 0);
                     startTimer = true;
                 }
@@ -176,14 +174,14 @@ public class Main extends GameApplication {
         physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.RED_KEY) {
             @Override
             protected void onCollision(Entity a, Entity b) {
-                pickUpItem("Red Key", b);
+                pickUpItem(b);
             }
         });
 
         physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.CHIP) {
             @Override
             protected void onCollision(Entity a, Entity b) {
-                pickUpItem("Chip", b);
+                pickUpItem(b);
             }
         });
 
@@ -198,7 +196,7 @@ public class Main extends GameApplication {
         physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.GREEN_KEY) {
             @Override
             protected void onCollision(Entity a, Entity b) {
-                pickUpItem("Green Key", b);
+                pickUpItem(b);
             }
         });
 
@@ -206,7 +204,7 @@ public class Main extends GameApplication {
         physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.BLUE_KEY) {
             @Override
             protected void onCollision(Entity a, Entity b) {
-                pickUpItem("Blue Key", b);
+                pickUpItem(b);
             }
         });
 
@@ -214,19 +212,48 @@ public class Main extends GameApplication {
         physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.RED_KEY_WALL) {
             @Override
             protected void onCollision(Entity a, Entity b) {
-                hbox.getItems().remove("Red Key");
-                EmptyTile tile = new EmptyTile();
-                tile.setPosition(b.getPosition());
+                enterKeyTile(b);
+            }
+        });
 
-                b.removeFromWorld();
-                getGameScene().addGameView(tile.getView());
-                getGameWorld().addEntity(tile);
+        // Blue Key Wall
+        physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.BLUE_KEY_WALL) {
+            @Override
+            protected void onCollision(Entity a, Entity b) {
+                enterKeyTile(b);
+            }
+        });
+
+        // Yellow Key Wall
+        physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.YELLOW_KEY_WALL) {
+            @Override
+            protected void onCollision(Entity a, Entity b) {
+                enterKeyTile(b);
+            }
+        });
+
+        // Green Key Wall
+        physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.GREEN_KEY_WALL) {
+            @Override
+            protected void onCollision(Entity a, Entity b) {
+                enterKeyTile(b);
             }
         });
     }
 
-    private void pickUpItem(String nameOfItem, Entity b) {
-        hbox.getItems().add(nameOfItem);
+    private void enterKeyTile(Entity b) {
+        hbox.getItems().remove(b.getClass().getSimpleName().replace("Wall", ""));
+
+        EmptyTile tile = new EmptyTile();
+        tile.setPosition(b.getPosition());
+
+        b.removeFromWorld();
+        getGameScene().addGameView(tile.getView());
+        getGameWorld().addEntity(tile);
+    }
+
+    private void pickUpItem(Entity b) {
+        hbox.getItems().add(b.getClass().getSimpleName());
 
         // Replace tile with empty one
         EmptyTile tile = new EmptyTile();
