@@ -1,6 +1,8 @@
-package code.model;
+package code.model.items.walls;
 
 import code.AbstractTile;
+import code.model.Tile;
+import code.model.Type;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 

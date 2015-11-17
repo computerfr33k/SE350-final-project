@@ -1,8 +1,15 @@
 package code;
 
-import code.model.*;
+import code.model.EmptyTile;
+import code.model.Enemy;
+import code.model.Level;
+import code.model.Portal;
 import code.model.items.Chip;
 import code.model.items.RedKey;
+import code.model.items.walls.BlueKeyWall;
+import code.model.items.walls.GreenKeyWall;
+import code.model.items.walls.RedKeyWall;
+import code.model.items.walls.Wall;
 import com.almasb.fxgl.asset.AssetManager;
 
 import java.util.List;
@@ -29,12 +36,20 @@ public class LevelParser {
                     entity = new EmptyTile();
                 } else if (c == '2') {
                     entity = new Enemy();
-                } else if (c == '3') {
+                } else if (c == 'r') {
                     entity = new RedKey();
                 } else if (c == '4') {
                     entity = new Chip();
                 } else if (c == '5') {
                     entity = new Portal();
+                } else if (c == '6') {
+                    entity = new RedKeyWall();
+                } else if (c == '7') {
+                    entity = new BlueKeyWall();
+                } else if (c == '8') {
+
+                } else if (c == '9') {
+                    entity = new GreenKeyWall();
                 }
 
                 if (entity != null) {

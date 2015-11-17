@@ -12,6 +12,9 @@ import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsManager;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.util.ApplicationMode;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
@@ -45,6 +48,19 @@ public class Main extends GameApplication {
         gameSettings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 
+    private ReadOnlyBooleanProperty isPassableEntity(Entity entity) {
+        BooleanProperty wall = new ReadOnlyBooleanWrapper(true);
+
+        // Check for entities that are not passable
+        if (entity.getEntityType() == Type.WALL) {
+            wall.setValue(false);
+        } else if (entity.getEntityType() == Type.RED_KEY_WALL && !hbox.getItems().contains("Red Key")) {
+            wall.setValue(false);
+        }
+
+        return wall;
+    }
+
     @Override
     protected void initInput() {
         InputManager input = getInputManager();
@@ -52,8 +68,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX(), player.getY() - Tile.BLOCK_SIZE);
-
-                if (getGameWorld().getEntityAt(nextCoord).get().getEntityType() != Type.WALL) {
+                if (isPassableEntity(getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
                     player.setPosition(nextCoord);
 
                     startTimer = true;
@@ -65,7 +80,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX(), player.getY() + Tile.BLOCK_SIZE);
-                if (!getGameWorld().getEntityAt(nextCoord).get().isType(Type.WALL)) {
+                if (isPassableEntity(getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
                     player.setPosition(nextCoord);
 
                     startTimer = true;
@@ -77,7 +92,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX() + Tile.BLOCK_SIZE, player.getY());
-                if (!getGameWorld().getEntityAt(nextCoord).get().isType(Type.WALL)) {
+                if (isPassableEntity(getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
                     player.translate(Tile.BLOCK_SIZE, 0);
                     startTimer = true;
                 }
@@ -88,7 +103,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX() - Tile.BLOCK_SIZE, player.getY());
-                if (!getGameWorld().getEntityAt(nextCoord).get().isType(Type.WALL)) {
+                if (isPassableEntity(getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
                     player.translate(-Tile.BLOCK_SIZE, 0);
                     startTimer = true;
                 }
@@ -170,6 +185,20 @@ public class Main extends GameApplication {
             @Override
             protected void onCollisionBegin(Entity a, Entity b) {
                 getSceneManager().showMessageBox("Congratulations, You Won!");
+            }
+        });
+
+        // Red Key Wall
+        physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.RED_KEY_WALL) {
+            @Override
+            protected void onCollision(Entity a, Entity b) {
+                hbox.getItems().remove("Red Key");
+                EmptyTile tile = new EmptyTile();
+                tile.setPosition(b.getPosition());
+
+                b.removeFromWorld();
+                getGameScene().addGameView(tile.getView());
+                getGameWorld().addEntity(tile);
             }
         });
     }
