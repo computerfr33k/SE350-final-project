@@ -4,12 +4,14 @@ import code.model.EmptyTile;
 import code.model.Enemy;
 import code.model.Level;
 import code.model.Portal;
+import code.model.items.BlueKey;
 import code.model.items.Chip;
+import code.model.items.GreenKey;
 import code.model.items.RedKey;
-import code.model.items.walls.BlueKeyWall;
-import code.model.items.walls.GreenKeyWall;
-import code.model.items.walls.RedKeyWall;
-import code.model.items.walls.Wall;
+import code.model.walls.BlueKeyWall;
+import code.model.walls.GreenKeyWall;
+import code.model.walls.RedKeyWall;
+import code.model.walls.Wall;
 import com.almasb.fxgl.asset.AssetManager;
 
 import java.util.List;
@@ -50,6 +52,10 @@ public class LevelParser {
 
                 } else if (c == '9') {
                     entity = new GreenKeyWall();
+                } else if (c == 'g') {
+                    entity = new GreenKey();
+                } else if (c == 'b') {
+                    entity = new BlueKey();
                 }
 
                 if (entity != null) {

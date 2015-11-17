@@ -1,4 +1,4 @@
-package code.model.items.walls;
+package code.model.walls;
 
 /**
  * Created by eric on 11/17/15.

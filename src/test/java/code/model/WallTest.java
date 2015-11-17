@@ -1,6 +1,6 @@
 package code.model;
 
-import code.model.items.walls.Wall;
+import code.model.walls.Wall;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertFalse;

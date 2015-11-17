@@ -1,4 +1,4 @@
-package code.model.items.walls;
+package code.model.walls;
 
 import code.AbstractTile;
 import code.controller.Assets;

@@ -56,6 +56,12 @@ public class Main extends GameApplication {
             wall.setValue(false);
         } else if (entity.getEntityType() == Type.RED_KEY_WALL && !hbox.getItems().contains("Red Key")) {
             wall.setValue(false);
+        } else if (entity.getEntityType() == Type.BLUE_KEY_WALL && !hbox.getItems().contains("Blue Key")) {
+            wall.setValue(false);
+        } else if (entity.getEntityType() == Type.YELLOW_KEY_WALL && !hbox.getItems().contains("Yellow Key")) {
+            wall.setValue(false);
+        } else if (entity.getEntityType() == Type.GREEN_KEY_WALL && !hbox.getItems().contains("Green Key")) {
+            wall.setValue(false);
         }
 
         return wall;
@@ -185,6 +191,22 @@ public class Main extends GameApplication {
             @Override
             protected void onCollisionBegin(Entity a, Entity b) {
                 getSceneManager().showMessageBox("Congratulations, You Won!");
+            }
+        });
+
+        // Green Key
+        physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.GREEN_KEY) {
+            @Override
+            protected void onCollision(Entity a, Entity b) {
+                pickUpItem("Green Key", b);
+            }
+        });
+
+        // Blue Key
+        physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.BLUE_KEY) {
+            @Override
+            protected void onCollision(Entity a, Entity b) {
+                pickUpItem("Blue Key", b);
             }
         });
 
