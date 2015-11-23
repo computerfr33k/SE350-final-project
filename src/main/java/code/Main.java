@@ -308,6 +308,7 @@ public class Main extends GameApplication {
         chipsRemaining.setX(Tile.BLOCK_SIZE * 35);
         chipsRemaining.setY(Tile.BLOCK_SIZE * 2);
         chipsRemaining.setFont(Font.font(18));
+
         // This binds the level chip counter with the UI for displaying the amount.
         // allows me to update the value in either class and the other one gets notified about the new value.
         chipsRemaining.textProperty().bindBidirectional(level.getTotalChipsProperty(), new NumberStringConverter());
