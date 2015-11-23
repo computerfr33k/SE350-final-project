@@ -42,6 +42,8 @@ public class LevelParser {
                     entity = new RedKey();
                 } else if (c == '4') {
                     entity = new Chip();
+                    level.setTotalChips(level.getTotalChips().add(1).get());
+
                 } else if (c == '5') {
                     entity = new Portal();
                 } else if (c == '6') {

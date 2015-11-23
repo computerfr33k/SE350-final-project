@@ -12,9 +12,6 @@ import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsManager;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.util.ApplicationMode;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
@@ -23,6 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.util.converter.NumberStringConverter;
 
 public class Main extends GameApplication {
     private Player player;
@@ -31,6 +29,7 @@ public class Main extends GameApplication {
     private Text inventory;
     private ListView hbox;
     private boolean startTimer = false;
+    private Level level;
 
     public static void main(String[] args) {
         launch(args);
@@ -48,23 +47,6 @@ public class Main extends GameApplication {
         gameSettings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 
-    private ReadOnlyBooleanProperty isPassableEntity(AbstractTile entity) {
-        BooleanProperty wall = new ReadOnlyBooleanWrapper(true);
-
-        // Check for entities that are not passable
-        if (entity.getEntityType() == Type.WALL) {
-            wall.setValue(false);
-        } else if (entity.isKeyedEntrance().getValue()) {
-            if (!hbox.getItems().contains(entity.getClass().getSimpleName().replace("Wall", ""))) {
-                wall.setValue(false);
-            }
-        }
-
-        System.out.println(wall.get());
-
-        return wall;
-    }
-
     @Override
     protected void initInput() {
         InputManager input = getInputManager();
@@ -72,7 +54,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX(), player.getY() - Tile.BLOCK_SIZE);
-                if (isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
+                if (Level.isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get(), hbox).getValue()) {
                     player.setPosition(nextCoord);
 
                     startTimer = true;
@@ -84,7 +66,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX(), player.getY() + Tile.BLOCK_SIZE);
-                if (isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
+                if (Level.isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get(), hbox).getValue()) {
                     player.setPosition(nextCoord);
 
                     startTimer = true;
@@ -96,7 +78,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX() + Tile.BLOCK_SIZE, player.getY());
-                if (isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
+                if (Level.isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get(), hbox).getValue()) {
                     player.translate(Tile.BLOCK_SIZE, 0);
                     startTimer = true;
                 }
@@ -107,7 +89,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX() - Tile.BLOCK_SIZE, player.getY());
-                if (isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get()).getValue()) {
+                if (Level.isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get(), hbox).getValue()) {
                     player.translate(-Tile.BLOCK_SIZE, 0);
                     startTimer = true;
                 }
@@ -133,16 +115,14 @@ public class Main extends GameApplication {
     protected void initGame() {
 
         // Parse Level to show on the screen
-        Level grid = null;
         try {
-            grid = LevelParser.parse(getAssetManager(), getAssetManager().cache().getText("default_level.txt"));
-            for (AbstractTile entity : grid.getGrid().values()) {
-                addTile(entity);
-            }
+            level = LevelParser.parse(getAssetManager(), getAssetManager().cache().getText("default_level.txt"));
+            level.getGrid().values().forEach(this::addTile);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        // Create Player Object
         initPlayer();
     }
 
@@ -188,7 +168,11 @@ public class Main extends GameApplication {
         physicsManager.addCollisionHandler(new CollisionHandler(Type.PLAYER, Type.PORTAL) {
             @Override
             protected void onCollisionBegin(Entity a, Entity b) {
-                getSceneManager().showMessageBox("Congratulations, You Won!");
+                if (level.getTotalChips().get() == 0) {
+                    getSceneManager().showMessageBox("Congratulations, You Won!");
+                } else {
+                    getSceneManager().showMessageBox("You need to collect all of the chips in order to complete the level.");
+                }
             }
         });
 
@@ -255,6 +239,10 @@ public class Main extends GameApplication {
     private void pickUpItem(Entity b) {
         hbox.getItems().add(b.getClass().getSimpleName());
 
+        if (b.getClass().getSimpleName().equals("Chip")) {
+            level.setTotalChips(level.getTotalChips().subtract(1).get());
+        }
+
         // Replace tile with empty one
         EmptyTile tile = new EmptyTile();
         tile.setPosition(b.getPosition());
@@ -300,7 +288,21 @@ public class Main extends GameApplication {
         hbox.setTranslateY(Tile.BLOCK_SIZE * 9.5);
         hbox.setItems(list);
 
-        getGameScene().addUINodes(timeLabel, time, inventory, hbox);
+        // Chips Remaining UI
+        Text chipsRemainingLabel = new Text("Chips Remaining: ");
+        chipsRemainingLabel.setX(Tile.BLOCK_SIZE * 30);
+        chipsRemainingLabel.setY(Tile.BLOCK_SIZE * 2);
+        chipsRemainingLabel.setFont(Font.font(18));
+
+        Text chipsRemaining = new Text();
+        chipsRemaining.setX(Tile.BLOCK_SIZE * 35);
+        chipsRemaining.setY(Tile.BLOCK_SIZE * 2);
+        chipsRemaining.setFont(Font.font(18));
+        // This binds the level chip counter with the UI for displaying the amount.
+        // allows me to update the value in either class and the other one gets notified about the new value.
+        chipsRemaining.textProperty().bindBidirectional(level.getTotalChipsProperty(), new NumberStringConverter());
+
+        getGameScene().addUINodes(timeLabel, time, inventory, hbox, chipsRemainingLabel, chipsRemaining);
     }
 
     @Override
@@ -309,6 +311,8 @@ public class Main extends GameApplication {
             // There are 60 ticks per second
             int current = (int) getTick() / 60;
             time.setText(String.valueOf(current));
+
+
         } else {
             // Don't count ticks until we move the player
             getTimerManager().resetTicks();
