@@ -8,6 +8,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.ListView;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +57,7 @@ public class Level implements Serializable {
     }
 
     public Map<Point2D, AbstractTile> getGrid() {
-        return grid;
+        return Collections.unmodifiableMap(grid);
     }
 
     public Entity getTile(Point2D point2D) {

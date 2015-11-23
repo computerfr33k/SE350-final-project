@@ -1,5 +1,6 @@
 package code.model;
 
+import code.model.walls.Wall;
 import com.almasb.fxgl.entity.Entity;
 import javafx.geometry.Point2D;
 import junit.framework.Assert;
@@ -9,6 +10,15 @@ import org.junit.Test;
  * Created by eric on 11/23/15.
  */
 public class LevelTest {
+
+    @Test
+    public void testAddingTilesToGrid() throws Exception {
+        Level level = new Level(null);
+        level.addTile(0, 0, new Wall());
+
+        Assert.assertTrue(level.getGrid().size() > 0);
+        Assert.assertEquals(level.getGrid().size(), 1);
+    }
 
     @Test
     public void testGettingTileByGridCoordinate() throws Exception {
