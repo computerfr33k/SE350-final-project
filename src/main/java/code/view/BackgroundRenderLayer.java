@@ -1,4 +1,4 @@
-package code.model;
+package code.view;
 
 import com.almasb.fxgl.entity.RenderLayer;
 

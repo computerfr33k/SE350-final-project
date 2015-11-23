@@ -1,7 +1,7 @@
 package code;
 
-import code.model.BackgroundRenderLayer;
 import code.model.Tile;
+import code.view.BackgroundRenderLayer;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityType;
 import com.almasb.fxgl.entity.EntityView;
