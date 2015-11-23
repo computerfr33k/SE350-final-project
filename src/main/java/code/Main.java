@@ -27,7 +27,7 @@ public class Main extends GameApplication {
     private Text time;
     private Text timeLabel;
     private Text inventory;
-    private ListView hbox;
+    private ListView inventoryList;
     private boolean startTimer = false;
     private Level level;
 
@@ -54,7 +54,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX(), player.getY() - Tile.BLOCK_SIZE);
-                if (Level.isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get(), hbox).getValue()) {
+                if (Level.isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get(), inventoryList).getValue()) {
                     player.setPosition(nextCoord);
 
                     startTimer = true;
@@ -66,7 +66,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX(), player.getY() + Tile.BLOCK_SIZE);
-                if (Level.isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get(), hbox).getValue()) {
+                if (Level.isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get(), inventoryList).getValue()) {
                     player.setPosition(nextCoord);
 
                     startTimer = true;
@@ -78,7 +78,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX() + Tile.BLOCK_SIZE, player.getY());
-                if (Level.isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get(), hbox).getValue()) {
+                if (Level.isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get(), inventoryList).getValue()) {
                     player.translate(Tile.BLOCK_SIZE, 0);
                     startTimer = true;
                 }
@@ -89,7 +89,7 @@ public class Main extends GameApplication {
             @Override
             protected void onActionBegin() {
                 Point2D nextCoord = new Point2D(player.getX() - Tile.BLOCK_SIZE, player.getY());
-                if (Level.isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get(), hbox).getValue()) {
+                if (Level.isPassableEntity((AbstractTile) getGameWorld().getEntityAt(nextCoord).get(), inventoryList).getValue()) {
                     player.translate(-Tile.BLOCK_SIZE, 0);
                     startTimer = true;
                 }
@@ -226,7 +226,7 @@ public class Main extends GameApplication {
     }
 
     private void enterKeyTile(Entity b) {
-        hbox.getItems().remove(b.getClass().getSimpleName().replace("Wall", ""));
+        inventoryList.getItems().remove(b.getClass().getSimpleName().replace("Wall", ""));
 
         EmptyTile tile = new EmptyTile();
         tile.setPosition(b.getPosition());
@@ -237,7 +237,7 @@ public class Main extends GameApplication {
     }
 
     private void pickUpItem(Entity b) {
-        hbox.getItems().add(b.getClass().getSimpleName());
+        inventoryList.getItems().add(b.getClass().getSimpleName());
 
         if (b.getClass().getSimpleName().equals("Chip")) {
             level.setTotalChips(level.getTotalChips().subtract(1).get());
@@ -283,10 +283,10 @@ public class Main extends GameApplication {
         inventory.setFont(Font.font(18));
 
         ObservableList<String> list = FXCollections.observableArrayList();
-        hbox = new ListView();
-        hbox.setTranslateX(Tile.BLOCK_SIZE * 30);
-        hbox.setTranslateY(Tile.BLOCK_SIZE * 9.5);
-        hbox.setItems(list);
+        inventoryList = new ListView();
+        inventoryList.setTranslateX(Tile.BLOCK_SIZE * 30);
+        inventoryList.setTranslateY(Tile.BLOCK_SIZE * 9.5);
+        inventoryList.setItems(list);
 
         // Chips Remaining UI
         Text chipsRemainingLabel = new Text("Chips Remaining: ");
@@ -302,7 +302,7 @@ public class Main extends GameApplication {
         // allows me to update the value in either class and the other one gets notified about the new value.
         chipsRemaining.textProperty().bindBidirectional(level.getTotalChipsProperty(), new NumberStringConverter());
 
-        getGameScene().addUINodes(timeLabel, time, inventory, hbox, chipsRemainingLabel, chipsRemaining);
+        getGameScene().addUINodes(timeLabel, time, inventory, inventoryList, chipsRemainingLabel, chipsRemaining);
     }
 
     @Override
