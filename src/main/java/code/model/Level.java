@@ -7,13 +7,14 @@ import javafx.beans.property.*;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ListView;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by eric on 11/2/15.
  */
-public class Level {
+public class Level implements Serializable {
     private Map<Point2D, AbstractTile> grid;
     private AssetManager assets;
     private SimpleIntegerProperty totalChips;

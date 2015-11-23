@@ -22,14 +22,18 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.util.converter.NumberStringConverter;
 
+import java.io.Serializable;
+
 public class Main extends GameApplication {
     private Player player;
+    private Point2D playerPosition;
     private Text time;
     private Text timeLabel;
     private Text inventory;
     private ListView inventoryList;
     private boolean startTimer = false;
     private Level level;
+    private ObservableList<String> list;
 
     public static void main(String[] args) {
         launch(args);
@@ -134,7 +138,11 @@ public class Main extends GameApplication {
 
     private void initPlayer() {
         player = new Player();
-        player.setPosition(new Point2D(Tile.BLOCK_SIZE * 2, Tile.BLOCK_SIZE * 3));
+        if (playerPosition == null) {
+            playerPosition = new Point2D(Tile.BLOCK_SIZE * 2, Tile.BLOCK_SIZE * 3);
+        }
+
+        player.setPosition(playerPosition);
 
         getGameScene().addGameView(player.getView());
         getGameWorld().addEntity(player);
@@ -282,7 +290,9 @@ public class Main extends GameApplication {
         inventory.setTranslateY(Tile.BLOCK_SIZE * 9);
         inventory.setFont(Font.font(18));
 
-        ObservableList<String> list = FXCollections.observableArrayList();
+        if (list == null) {
+            list = FXCollections.observableArrayList();
+        }
         inventoryList = new ListView();
         inventoryList.setTranslateX(Tile.BLOCK_SIZE * 30);
         inventoryList.setTranslateY(Tile.BLOCK_SIZE * 9.5);
@@ -316,6 +326,45 @@ public class Main extends GameApplication {
         } else {
             // Don't count ticks until we move the player
             getTimerManager().resetTicks();
+        }
+    }
+
+    @Override
+    public Serializable saveState() {
+        String data = "";
+        // Save Player Position
+        data += player.getX() + "," + player.getY();
+        data += ",";
+
+        // Save Inventory
+        data += inventoryList.getItems().size() + ",";
+        for (Object item : inventoryList.getItems().toArray()) {
+            data += item + ",";
+        }
+
+        // TODO: implement saving the entities of the grid
+        // so that when the user loads the game back all of the collected items are the same and not re-added.
+        // Need more time to implement this feature.
+
+        return data;
+    }
+
+    private void print(String str) {
+        System.out.println(str);
+    }
+
+    @Override
+    public void loadState(Serializable loadData) {
+        String data = (String) loadData;
+        String[] values = data.split(",");
+
+        playerPosition = new Point2D(Double.parseDouble(values[0]), Double.parseDouble(values[1]));
+
+        System.out.println(values[2]);
+        list = FXCollections.observableArrayList();
+        for (int i = 0; i < Integer.parseInt(values[2]); i++) {
+            System.out.println(values[i + 3]);
+            list.add(values[i + 3]);
         }
     }
 }
